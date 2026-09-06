@@ -8,7 +8,7 @@ import "KeyCatalog.js" as KeyCatalog
 
 BarWidget {
     id: root
-    moduleName: "dimef.butterfly-guard"
+    moduleName: "dimef.oncekey"
     property string filterState: "not installed / stopped"
     property int delayMs: 40
     property int dropped: 0
@@ -34,7 +34,7 @@ BarWidget {
     function save() {
         try {
             var config = SettingsModel.buildConfig(globalDelay.text, overrides)
-            control.command = ["pkexec", "/usr/local/bin/butterfly-guardctl", "set-config", JSON.stringify(config), savedConfigJson]
+            control.command = ["pkexec", "/usr/local/bin/oncekeyctl", "set-config", JSON.stringify(config), savedConfigJson]
             message = "Saving… authenticate if prompted."
             lastError = ""
             root.close() // Release layer-shell focus before the authentication dialog opens.
@@ -56,7 +56,7 @@ BarWidget {
     function act(action) {
         if (control.running) return
         lastError = ""
-        control.command = ["pkexec", "/usr/local/bin/butterfly-guardctl", action]
+        control.command = ["pkexec", "/usr/local/bin/oncekeyctl", action]
         root.close() // Authentication must own keyboard focus.
         control.running = true
     }
@@ -86,7 +86,7 @@ BarWidget {
     }
     Process {
         id: probe
-        command: ["cat", "/run/butterfly-guard/status.json"]
+        command: ["cat", "/run/oncekey/status.json"]
         stdout: StdioCollector {
             onStreamFinished: {
                 try {
@@ -119,7 +119,7 @@ BarWidget {
     }
     Process {
         id: configProbe
-        command: ["cat", "/etc/butterfly-guard.json"]
+        command: ["cat", "/etc/oncekey.json"]
         stdout: StdioCollector {
             onStreamFinished: {
                 try {
@@ -273,7 +273,7 @@ BarWidget {
         }
     }
     IpcHandler {
-        target: "butterfly-guard"
+        target: "oncekey"
         function configure(): void { root.popupOpen = true; if (!root.loaded) root.loadSettings() }
         function close(): void { root.close() }
         function settingsStatus(): string { return JSON.stringify({loaded: root.loaded, dirty: root.dirty, message: root.message, visibleKeys: keyList.count, open: root.popupOpen, searchFocused: search.activeFocus}) }

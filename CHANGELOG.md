@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Standardize the plugin ID, commands, service, config paths, and documentation on onceKey (`dimef.oncekey` / `oncekey`).
+
 - Use Omarchy KeyboardPanel so reopening settings reliably acquires typing focus.
 - Release panel focus before administrator authentication for save/start/stop.
 

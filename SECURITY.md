@@ -14,7 +14,7 @@ The typing-test field is local UI state, not a telemetry feature.
 Installation copies a locally built executable to /usr/local/bin and a systemd
 unit to /etc/systemd/system. There are no passwordless sudoers rules, remote
 installer scripts, or broadly writable input-device permissions. Configuration
-is stored in /etc/butterfly-guard.json and explicitly saved through the panel.
+is stored in /etc/oncekey.json and explicitly saved through the panel.
 
 The service uses NoNewPrivileges, ProtectSystem=strict, ProtectHome, PrivateTmp,
 and restricted address families. This is not a security audit or a claim that
@@ -22,4 +22,4 @@ handling raw keyboard input is risk-free.
 
 For reports, do not include passwords, typed input recordings, or other sensitive
 material. Use repository issues for non-sensitive problems. Stop filtering with
-`sudo systemctl disable --now butterfly-guard.service` if input misbehaves.
+`sudo systemctl disable --now oncekey.service` if input misbehaves.

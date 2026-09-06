@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "dimef.butterfly-guard",
+  "id": "dimef.oncekey",
   "name": "onceKey",
   "version": "1.2.0",
   "description": "Reduce accidental double letters from chattering Apple SPI butterfly keyboards. Global and per-key debounce controls for Omarchy.",

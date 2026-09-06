@@ -79,7 +79,7 @@ After the repository is published:
 
 ```sh
 omarchy plugin add https://github.com/jimg4/oncekey --enable
-cd ~/.config/omarchy/plugins/dimef.butterfly-guard
+cd ~/.config/omarchy/plugins/dimef.oncekey
 ```
 
 For a local source checkout, run the following from its root:
@@ -90,10 +90,10 @@ omarchy pkg add rust
 cargo build --release --locked
 sudo bash ./install.sh
 # For an external local checkout only (skip if already in the plugin directory):
-# mkdir -p ~/.config/omarchy/plugins/dimef.butterfly-guard
-# cp manifest.json Widget.qml SettingsModel.js KeyCatalog.js ~/.config/omarchy/plugins/dimef.butterfly-guard/
+# mkdir -p ~/.config/omarchy/plugins/dimef.oncekey
+# cp manifest.json Widget.qml SettingsModel.js KeyCatalog.js ~/.config/omarchy/plugins/dimef.oncekey/
 omarchy-shell shell rescanPlugins
-omarchy plugin enable dimef.butterfly-guard --section right
+omarchy plugin enable dimef.oncekey --section right
 ```
 
 The installer copies the service and compiled executable to root-owned system paths.
@@ -123,14 +123,14 @@ with the absolute installer path in place of `sudo bash`.
   intentional double letters. Test words such as `apple`, `letter`, and `book`.
 
 ```sh
-sudo butterfly-guardctl set-delay 40
-sudo butterfly-guardctl stop
-sudo butterfly-guardctl start
-systemctl status butterfly-guard.service
-journalctl -u butterfly-guard.service -b
+sudo oncekeyctl set-delay 40
+sudo oncekeyctl stop
+sudo oncekeyctl start
+systemctl status oncekey.service
+journalctl -u oncekey.service -b
 ```
 
-The panel saves `/etc/butterfly-guard.json`. Advanced users can also edit it as
+The panel saves `/etc/oncekey.json`. Advanced users can also edit it as
 administrator and restart the service. `key_delays_ms` maps numeric Linux keycodes to 0–200 ms intervals;
 for example `"30": 60` tunes KEY_A and `"42": 0` exempts left Shift. Default
 `delay_ms` applies to all other keys. Keycodes refer to physical keys before
@@ -142,17 +142,17 @@ queue overflow it recreates the virtual keyboard with fresh state. Stop/start
 and delay changes briefly recreate that keyboard; release keys before changing
 settings. An external keyboard remains available for recovery. If input breaks,
 stop the service from a terminal, external keyboard, or SSH with
-`sudo systemctl disable --now butterfly-guard.service`.
+`sudo systemctl disable --now oncekey.service`.
 
 Disabling/removing the bar plugin only removes its UI; stop the service first
 to disable filtering. To uninstall the system filter from the source directory:
 
 ```sh
 sudo bash ./uninstall.sh
-omarchy plugin remove dimef.butterfly-guard --yes
+omarchy plugin remove dimef.oncekey --yes
 ```
 
-The uninstaller retains `/etc/butterfly-guard.json` so your tuning survives a
+The uninstaller retains `/etc/oncekey.json` so your tuning survives a
 reinstall. Use `sudo bash ./uninstall.sh --purge` to remove it too.
 
 ## Verify

@@ -1,5 +1,5 @@
-use butterfly_guard::{parse_config, Config, Debouncer};
 use evdev::{raw_stream::RawDevice, uinput::VirtualDevice, EventType, InputEvent};
+use oncekey::{parse_config, Config, Debouncer};
 use std::{
     fs, io,
     os::fd::AsRawFd,
@@ -13,9 +13,9 @@ use std::{
     time::{Duration, Instant, UNIX_EPOCH},
 };
 
-const CONFIG: &str = "/etc/butterfly-guard.json";
-const STATUS: &str = "/run/butterfly-guard/status.json";
-const UNIT: &str = "butterfly-guard.service";
+const CONFIG: &str = "/etc/oncekey.json";
+const STATUS: &str = "/run/oncekey/status.json";
+const UNIT: &str = "oncekey.service";
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 nix::ioctl_write_ptr!(set_clock, b'E', 0xa0, libc::c_int);
 
@@ -91,7 +91,7 @@ fn attach(mut device: RawDevice, config: &Config) -> Result<Session> {
         .supported_keys()
         .ok_or("Keyboard has no key capabilities")?;
     let builder = VirtualDevice::builder()?
-        .name("Butterfly Guard Keyboard")
+        .name("onceKey Keyboard")
         .with_keys(keys)?;
     // EV_REP is intentionally omitted: preserve physical repeats without a second kernel timer.
     let output = builder.build()?;
@@ -268,7 +268,7 @@ fn control(args: &[String]) -> Result<()> {
                 .create(true)
                 .truncate(false)
                 .write(true)
-                .open("/run/butterfly-guard-config.lock")?;
+                .open("/run/oncekey-config.lock")?;
             lock.lock()?;
             if load_config(CONFIG)? != previous {
                 return Err("Settings changed elsewhere. Reload settings before saving.".into());
@@ -293,7 +293,7 @@ fn control(args: &[String]) -> Result<()> {
             fs::rename(format!("{CONFIG}.tmp"), CONFIG)?;
             systemctl(&["try-restart"])
         }
-        _ => Err("Usage: butterfly-guardctl start|stop|toggle|cycle|set-delay MILLISECONDS".into()),
+        _ => Err("Usage: oncekeyctl start|stop|toggle|cycle|set-delay MILLISECONDS".into()),
     }
 }
 fn main() {
@@ -304,13 +304,13 @@ fn main() {
             load_config(&args[1]).map(|_| println!("Configuration valid"))
         }
         Some("--help") | None => {
-            println!("Butterfly Guard 1.2.0\nCommands: daemon, check-config PATH, start, stop, toggle, cycle, set-delay MS, set-config JSON EXPECTED_JSON");
+            println!("onceKey 1.2.0\nCommands: daemon, check-config PATH, start, stop, toggle, cycle, set-delay MS, set-config JSON EXPECTED_JSON");
             Ok(())
         }
         _ => control(&args),
     };
     if let Err(error) = result {
-        eprintln!("Butterfly Guard: {error}");
+        eprintln!("onceKey: {error}");
         std::process::exit(1);
     }
 }

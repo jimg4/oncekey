@@ -1,15 +1,15 @@
 [Unit]
-Description=Butterfly Guard built-in Apple keyboard debounce
+Description=onceKey built-in Apple keyboard debounce
 After=systemd-udevd.service
 StartLimitIntervalSec=30
 StartLimitBurst=5
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/butterfly-guard daemon
+ExecStart=/usr/local/bin/oncekey daemon
 Restart=on-failure
 RestartSec=2
-RuntimeDirectory=butterfly-guard
+RuntimeDirectory=oncekey
 RuntimeDirectoryMode=0755
 UMask=0022
 NoNewPrivileges=yes

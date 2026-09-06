@@ -16,6 +16,10 @@ keyboard
 
 ### Maintainer notes
 
+The plugin ID, commands, service, configuration paths, and documentation now consistently use `dimef.oncekey` / `oncekey`, with `onceKey` as the display name. Rust tests, JavaScript settings tests, Clippy, the release build, and Omarchy manifest validation passed. The renamed service is running locally with the existing settings preserved. Please validate the current repository HEAD.
+
+Update: commit `8298e07` fixes intermittent settings-panel keyboard focus on opening/reopening and releases focus before administrator authentication. Tested live across the initial opening and three rapid reopen cycles. Please validate the updated repository HEAD.
+
 onceKey mitigates accidental double letters / switch chatter on supported Apple
 SPI butterfly keyboards under Omarchy. Inspired by Unshaky on macOS, with an
 independently implemented Rust evdev/uinput filter and QML settings panel.
@@ -35,13 +39,12 @@ not repaired. Caps Lock LED synchronization is a documented limitation.
 
 Includes original plugin screenshots, MIT license, dependency/permission notes,
 configuration tests, installation and removal instructions, and preview.png.
-The legacy internal ID dimef.butterfly-guard is retained for compatibility with
-the first local version; the public display name is onceKey.
+The plugin ID is dimef.oncekey; the display name is onceKey.
 
 ### Submission checklist
 
-- [ ] The repository is public and contains installation and removal instructions.
-- [ ] I have documented the plugin license and any external dependencies.
-- [ ] I confirm that I own or have permission to submit this plugin and its preview assets.
-- [ ] The plugin does not overwrite user configuration without explicit consent.
-- [ ] I understand that approval is for listing and is not a security review.
+- [x] The repository is public and contains installation and removal instructions.
+- [x] I have documented the plugin license and any external dependencies.
+- [x] I confirm that I own or have permission to submit this plugin and its preview assets.
+- [x] The plugin does not overwrite user configuration without explicit consent.
+- [x] I understand that approval is for listing and is not a security review.
