@@ -1,0 +1,19 @@
+name: Checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Rust tests and lint
+        run: |
+          cargo test --locked
+          cargo clippy --all-targets --locked -- -D warnings
+      - name: UI model and shell syntax
+        run: |
+          node tests/settings.test.cjs
+          bash -n install.sh uninstall.sh
+      - name: Release build
+        run: cargo build --release --locked

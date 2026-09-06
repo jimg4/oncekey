@@ -1,0 +1,13 @@
+const {readFileSync} = require('node:fs');
+const vm = require('node:vm');
+const assert = require('node:assert/strict');
+const m = vm.createContext({});
+vm.runInContext(readFileSync('SettingsModel.js','utf8'),m);
+const build = (g,o) => JSON.parse(JSON.stringify(m.buildConfig(g,o)));
+assert.deepEqual(build('40',{'30':'60','42':'0','48':''}),{delay_ms:40,key_delays_ms:{30:60,42:0}});
+assert.deepEqual(build('0',{}),{delay_ms:0,key_delays_ms:{}});
+assert.deepEqual(build('200',{}),{delay_ms:200,key_delays_ms:{}});
+for (const v of ['', '-1','201','1.5','NaN',' 40','040']) assert.throws(()=>build(v,{}));
+for (const o of [{'30':'201'},{'30':'1.5'},{'768':'40'},{'0':'40'},{'abc':'40'}]) assert.throws(()=>build('40',o));
+assert.equal(m.keyLabel('LEFTMETA'),'Left Command');
+console.log('Settings validation tests passed');
