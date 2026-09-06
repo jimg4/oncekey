@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Use Omarchy KeyboardPanel so reopening settings reliably acquires typing focus.
+- Release panel focus before administrator authentication for save/start/stop.
+
 ## 1.2.0 — publication candidate
 
 - onceKey branding and icon-only bar display.

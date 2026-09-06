@@ -37,6 +37,7 @@ BarWidget {
             control.command = ["pkexec", "/usr/local/bin/butterfly-guardctl", "set-config", JSON.stringify(config), savedConfigJson]
             message = "Saving… authenticate if prompted."
             lastError = ""
+            root.close() // Release layer-shell focus before the authentication dialog opens.
             control.running = true
         } catch (error) { message = String(error.message) }
     }
@@ -56,6 +57,7 @@ BarWidget {
         if (control.running) return
         lastError = ""
         control.command = ["pkexec", "/usr/local/bin/butterfly-guardctl", action]
+        root.close() // Authentication must own keyboard focus.
         control.running = true
     }
     Text {
@@ -133,12 +135,13 @@ BarWidget {
         }
         onExited: function(code) { if (code !== 0) root.message = "Could not read saved settings." }
     }
-    PopupCard {
+    KeyboardPanel {
         id: popup
         anchorItem: root
         bar: root.bar
         owner: root
         open: root.popupOpen
+        focusTarget: search
         contentWidth: popup.fittedContentWidth(Style.space(560))
         contentHeight: popup.fittedContentHeight(Style.space(620))
 
@@ -273,7 +276,7 @@ BarWidget {
         target: "butterfly-guard"
         function configure(): void { root.popupOpen = true; if (!root.loaded) root.loadSettings() }
         function close(): void { root.close() }
-        function settingsStatus(): string { return JSON.stringify({loaded: root.loaded, dirty: root.dirty, message: root.message, visibleKeys: keyList.count}) }
+        function settingsStatus(): string { return JSON.stringify({loaded: root.loaded, dirty: root.dirty, message: root.message, visibleKeys: keyList.count, open: root.popupOpen, searchFocused: search.activeFocus}) }
     }
     Timer { interval: 2000; running: true; repeat: true; onTriggered: root.refresh() }
     Component.onCompleted: refresh()
