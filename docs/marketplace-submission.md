@@ -20,6 +20,8 @@ The plugin ID, commands, service, configuration paths, and documentation now con
 
 Update: commit `8298e07` fixes intermittent settings-panel keyboard focus on opening/reopening and releases focus before administrator authentication. Tested live across the initial opening and three rapid reopen cycles. Please validate the updated repository HEAD.
 
+Update: commit `2ca1bef` fixes duplicate letters that could slip through after longer key holds: the debounce delay now counts from the key's last press or release instead of only the original press. Covered by new regression tests; Rust tests, JavaScript settings tests, Clippy, and the release build passed, and the updated filter is running locally. Please validate the updated repository HEAD.
+
 onceKey mitigates accidental double letters / switch chatter on supported Apple
 SPI butterfly keyboards under Omarchy. Inspired by Unshaky on macOS, with an
 independently implemented Rust evdev/uinput filter and QML settings panel.
