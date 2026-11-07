@@ -304,7 +304,7 @@ fn main() {
             load_config(&args[1]).map(|_| println!("Configuration valid"))
         }
         Some("--help") | None => {
-            println!("onceKey 1.2.0\nCommands: daemon, check-config PATH, start, stop, toggle, cycle, set-delay MS, set-config JSON EXPECTED_JSON");
+            println!("onceKey {}\nCommands: daemon, check-config PATH, start, stop, toggle, cycle, set-delay MS, set-config JSON EXPECTED_JSON", env!("CARGO_PKG_VERSION"));
             Ok(())
         }
         _ => control(&args),
