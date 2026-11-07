@@ -20,8 +20,10 @@ Unshaky port, and is not affiliated with Apple or Unshaky.
 
 ### What happens when you type?
 
-With a 40 ms delay, a key's first press goes through immediately. A second press of
-**that same key** less than 40 ms later is suppressed, together with its release.
+With a 40 ms delay, a key's first press goes through immediately. A press of
+**that same key** less than 40 ms after its last press or release is suppressed,
+together with its release. Timing from the release matters because chatter usually
+arrives just after the key comes up, however long it was held.
 Different keys are independent. Normal held-key repeat is preserved for accepted
 presses. There is no 40 ms wait before the first letter appears.
 

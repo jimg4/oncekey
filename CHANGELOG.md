@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Fix duplicate letters slipping through after longer key holds: the delay now counts from the key's last press or release (including suppressed bounces), not only from the original press.
 - Standardize the plugin ID, commands, service, config paths, and documentation on onceKey (`dimef.oncekey` / `oncekey`).
 
 - Use Omarchy KeyboardPanel so reopening settings reliably acquires typing focus.

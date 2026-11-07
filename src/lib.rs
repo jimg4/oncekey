@@ -70,6 +70,9 @@ impl Debouncer {
         };
         match value {
             1 => {
+                // Chatter is a press too soon after this key's last press or
+                // release. Measuring from the press alone lets a long hold use
+                // up the window, so bounces right after release got through.
                 if key.down || key.blocked {
                     return false;
                 }
@@ -77,16 +80,19 @@ impl Debouncer {
                     .last_us
                     .and_then(|last| time_us.checked_sub(last))
                     .is_some_and(|elapsed| elapsed < self.delays_us[code as usize]);
+                key.last_us = Some(time_us);
                 if recent {
                     key.blocked = true;
                     self.dropped += 1;
                     return false;
                 }
-                key.last_us = Some(time_us);
                 key.down = true;
                 true
             }
             0 => {
+                // Suppressed releases also restart the timer, so a burst of
+                // bounces stays blocked until the key goes quiet.
+                key.last_us = Some(time_us);
                 key.blocked = false;
                 std::mem::take(&mut key.down)
             }
@@ -112,9 +118,35 @@ mod tests {
         assert!(d.accept(30, 0, 10000));
         assert!(!d.accept(30, 1, 20000));
         assert!(!d.accept(30, 0, 30000));
-        assert!(d.accept(30, 1, 40000));
-        assert!(d.accept(30, 0, 50000));
+        assert!(!d.accept(30, 1, 40000)); // 10 ms after the bounce's release
+        assert!(!d.accept(30, 0, 45000));
+        assert!(d.accept(30, 1, 85000)); // 40 ms of quiet: intentional
+        assert!(d.accept(30, 0, 95000));
+        assert_eq!(d.dropped, 2);
+    }
+    #[test]
+    fn bounce_after_long_hold_is_chatter() {
+        // Butterfly chatter usually lands just after release, so a long hold
+        // must not use up the delay window.
+        let mut d = guard();
+        assert!(d.accept(30, 1, 0));
+        assert!(d.accept(30, 0, 120000));
+        assert!(!d.accept(30, 1, 125000));
+        assert!(!d.accept(30, 0, 130000));
         assert_eq!(d.dropped, 1);
+    }
+    #[test]
+    fn bounce_burst_keeps_blocking_until_quiet() {
+        let mut d = guard();
+        assert!(d.accept(30, 1, 0));
+        assert!(d.accept(30, 0, 10000));
+        // Each bounce is under 40 ms after the previous one, though the last
+        // is well over 40 ms after the real press.
+        for t in [30000, 50000, 70000, 90000] {
+            assert!(!d.accept(30, 1, t));
+            assert!(!d.accept(30, 0, t + 5000));
+        }
+        assert!(d.accept(30, 1, 140000));
     }
     #[test]
     fn chords_and_repeat() {
@@ -148,7 +180,7 @@ mod tests {
         d.block_held(42);
         assert!(!d.accept(42, 2, 0));
         assert!(!d.accept(42, 0, 1));
-        assert!(d.accept(42, 1, 2));
+        assert!(d.accept(42, 1, 40001));
     }
     #[test]
     fn overrides_and_disabled() {
