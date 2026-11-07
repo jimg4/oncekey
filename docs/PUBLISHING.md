@@ -5,14 +5,19 @@ Marketplace submission: https://github.com/omacom/omarchy-plugin-marketplace/iss
 Plugin ID: `dimef.oncekey`
 Display name: onceKey
 
-The existing submission is awaiting marketplace maintainer review. Update that
-issue after pushing changes to trigger validation of the current repository HEAD.
-The complete submission body is in `docs/marketplace-submission.md`.
+The plugin is listed and verified at
+https://omarchyplugins.com/plugin.html?id=dimef.oncekey. Submission issue 5257 is
+closed; editing it does not update the listing.
+
+To publish a newer commit, push it, then open a **Plugin verification** issue
+("Verify and publish a newer upstream commit") with the full HEAD SHA. A
+marketplace maintainer approves it before the listing switches to that commit.
 
 ```sh
 git push origin main
-gh issue edit 5257 --repo omacom/omarchy-plugin-marketplace \
-  --body-file docs/marketplace-submission.md
+gh issue create --repo omacom/omarchy-plugin-marketplace \
+  --title "[Verify]: dimef.oncekey update verification $(git rev-parse --short HEAD)" \
+  --body "..."  # sections from verify-plugin.yml
 ```
 
 Manual setup is required: marketplace installation loads the UI; building and
